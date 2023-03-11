@@ -42,7 +42,9 @@ pack() {
 
   echo "----- Packing this script..."
   cp "$scriptpath" $tmpdir/ || error
-  mv $tmpdir/$scriptname $tmpdir/install.sh
+  # mv $tmpdir/$scriptname $tmpdir/install.sh
+
+  # Add custom files here
 
   tar -C $tmpdir/.. -cvzf $installer_name-$( date '+%Y%m%d%H%M%S' ).tar.gz kitchen-sink || error
   rm -rf $tmpdir
@@ -63,6 +65,8 @@ unpack() {
   if [ $isInFile -lt 1 ]; then
     echo $nvimalias >> ~/.bashrc
   fi
+
+  # Add custom setup steps here
 }
 
 while getopts ":hpu" option; do
