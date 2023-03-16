@@ -3,12 +3,12 @@
 tmpdir="/tmp/kitchen-sink"
 config="$HOME/.config/nvim"
 local="$HOME/.local/share/nvim"
-nvimfile="nvim.tar.gz"
+nvimfile="nvim-linux64.tar.gz"
 scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 scriptname=$( basename -- "$0"; )
 scriptpath="$scriptdir/$scriptname"
 installer_name="nvim-installer"
-nvimalias="alias nvim='$scriptpath/nvim-linux64/bin/nvim'"
+nvimalias="alias nvim='$scriptdir/nvim-linux64/bin/nvim'"
 
 Help()
 {
@@ -38,7 +38,7 @@ pack() {
   cp -rv $local/* $tmpdir/local/ || error
 
   echo "----- Downloading most recent version of neovim"
-  wget -o $tmpdir/ https://github.com/neovim/neovim/releases/download/v0.8.3/nvim-linux64.tar.gz || error
+  wget -P $tmpdir https://github.com/neovim/neovim/releases/download/v0.8.3/nvim-linux64.tar.gz || error
 
   echo "----- Packing this script..."
   cp "$scriptpath" $tmpdir/ || error
