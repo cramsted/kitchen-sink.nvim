@@ -1,5 +1,9 @@
 #!/bin/bash
 
+testFlag=false
+packFlag=false
+unpackFlag=false
+
 tmpdir="/tmp/kitchen-sink"
 config="$HOME/.config/nvim"
 local="$HOME/.local/share/nvim"
@@ -40,14 +44,17 @@ pack() {
   echo "----- Downloading most recent version of neovim"
   wget -P $tmpdir https://github.com/neovim/neovim/releases/download/v0.8.3/nvim-linux64.tar.gz || error
 
-  echo "----- Packing this script..."
+  echo "----- Packing the installation script..."
   cp "$scriptpath" $tmpdir/ || error
   # mv $tmpdir/$scriptname $tmpdir/install.sh
 
   # Add custom files here
 
-  tar -C $tmpdir/.. -cvzf $installer_name-$( date '+%Y%m%d%H%M%S' ).tar.gz kitchen-sink || error
-  rm -rf $tmpdir
+  if [  "$testFlag" = false ]; then
+     echo "----- Creating the installer tar.gz..."
+     tar -C $tmpdir/.. -cvzf $installer_name-$( date '+%Y%m%d%H%M%S' ).tar.gz kitchen-sink || error
+     rm -rf $tmpdir
+  fi
 }
 
 # TODO: fix symlinks in .local so that they match the target OS
@@ -69,14 +76,17 @@ unpack() {
   # Add custom setup steps here
 }
 
-while getopts ":hpu" option; do
+while getopts ":hptu" option; do
    case $option in
       p) # display Help
-         pack
-         exit;;
+         packFlag=true
+         ;;
+      t) # display Help
+         testFlag=true
+         ;;
       u) # display Help
-         unpack
-         exit;;
+         unpackFlag=true
+         ;;
       h) # display Help
          Help
          exit;;
@@ -89,3 +99,9 @@ while getopts ":hpu" option; do
          exit;;
    esac
 done
+
+if [ "$packFlag" ]; then
+   pack
+elif [ "$unpackFlag" ]; then
+  unpack 
+fi
