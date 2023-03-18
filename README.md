@@ -40,14 +40,13 @@ Copy the `nvim-installer-<dateime>.tar.gz` to the offline computer and run the f
 ```bash
 tar xvzf nvim-installer-<dateime>.tar.gz
 cd kitchen-sink
-# the same script that is used to create the installer is included in the installer,
-# and is also used to unpack the installer
+# kitchen-sink.sh is included as part of the installer and is also used to unpack the installer
 ./kitchen-sink.sh -u
 ```
 
 # Testing
 
-Nothing is worse than making changes to your neovim config only to find that it throws errors after you have gone through the hassle of copying it over to an offline server. To help find these problems before you go all that trouble, an example `Dockerfile` and `docker-compose.yml` file are provided to allow for emulation of the installation target's environment.
+Nothing is worse than making changes to your neovim config only to find that it throws errors after you have gone through the hassle of copying it over to an offline server. To help find these problems before you go to all that trouble, an example `Dockerfile` and `docker-compose.yml` file are provided to allow for emulation of the installation target's environment.
 
 ## How to test
 
