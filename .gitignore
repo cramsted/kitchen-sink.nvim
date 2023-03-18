@@ -1,3 +1,4 @@
 kitchen-sink
 linkmod.sh
 nvim-installer-*
+.env

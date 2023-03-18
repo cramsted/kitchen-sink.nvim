@@ -13,6 +13,7 @@ scriptname=$( basename -- "$0"; )
 scriptpath="$scriptdir/$scriptname"
 installer_name="nvim-installer"
 nvimalias="alias nvim='$scriptdir/nvim-linux64/bin/nvim'"
+dockerenv=".docker.env"
 
 Help()
 {
@@ -61,10 +62,14 @@ pack() {
      echo ""
      tar -C $tmpdir/.. -cvzf $installer_name-$( date '+%Y%m%d%H%M%S' ).tar.gz kitchen-sink || error
      clean
+  else
+     touch $dockerenv
+     echo MY_UID="$(id -u)" >> $dockerenv
+     echo MY_GID="$(id -g)" >> $dockerenv
+     echo USER="$USER" >> $dockerenv
   fi
 }
 
-# TODO: fix symlinks in .local so that they match the target OS
 unpack() {
   # save the old conig, just in case
   echo "Saving old configuration..."

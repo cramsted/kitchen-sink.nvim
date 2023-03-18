@@ -7,7 +7,9 @@ RUN apt install git -y
 #   use it also for the run stage to setup the user
 #   if running in test mode, have it take care of generating the .env file
 #     Make sure to add .env file to .gitignore!!
-RUN useradd -ms /bin/bash cramstedt
+ARG USER
+RUN echo "testing: " $USER
+RUN useradd -ms /bin/bash $USER
 
 RUN mkdir -p /app
 WORKDIR /app

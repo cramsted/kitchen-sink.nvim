@@ -1,8 +1,13 @@
 version: "3.9"
 services:
   u20.04:
+    container_name: u20.24
+    env_file: .env
     user: ${MY_UID}:${MY_GID}
-    build: .
+    build: 
+      context: .
+      args:
+        - USER=${USER}
     network_mode: "none"
     volumes:
       - /tmp/kitchen-sink:/app
