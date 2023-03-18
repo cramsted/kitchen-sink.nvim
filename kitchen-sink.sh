@@ -21,9 +21,10 @@ Help()
    echo
    echo "Syntax: kitchen-sink.sh [-h|p|u]"
    echo "options:"
-   echo "h     print this help text"
-   echo "p     pack custom neovim config and create tar.gz file with everything needed for an offline installer"
-   echo "u     unpack contents of the current directory into a useable form"
+   echo "h     [help] print this help text"
+   echo "p     [package] pack custom neovim config and create tar.gz file with everything needed for an offline installer"
+   echo "t     [test package] run the pack comand"
+   echo "u     [unpackage] unpack contents of the current directory into a useable form"
    echo
 }
 
@@ -36,22 +37,27 @@ error()
 # TODO: include the libraries that newer versions of neovim require so that this can work on older systems
 pack() {
   echo "Packing Neovim config...."
+  echo ""
   mkdir -pv $tmpdir/{config,local} || error
 
-  cp -rv $config/* $tmpdir/config/ || error
-  cp -rv $local/* $tmpdir/local/ || error
+  rsync -ravHP $config/* $tmpdir/config/ || error
+  rsync -ravHP $local/* $tmpdir/local/ || error
 
   echo "----- Downloading most recent version of neovim"
+  echo ""
   wget -P $tmpdir https://github.com/neovim/neovim/releases/download/v0.8.3/nvim-linux64.tar.gz || error
 
   echo "----- Packing the installation script..."
+  echo ""
   cp "$scriptpath" $tmpdir/ || error
-  # mv $tmpdir/$scriptname $tmpdir/install.sh
 
+  ######################################## 
   # Add custom files here
+  ######################################## 
 
   if [  "$testFlag" = false ]; then
      echo "----- Creating the installer tar.gz..."
+     echo ""
      tar -C $tmpdir/.. -cvzf $installer_name-$( date '+%Y%m%d%H%M%S' ).tar.gz kitchen-sink || error
      rm -rf $tmpdir
   fi
@@ -60,12 +66,18 @@ pack() {
 # TODO: fix symlinks in .local so that they match the target OS
 unpack() {
   # save the old conig, just in case
+  echo "Saving old configuration..."
+  echo ""
   mv $config $config.bak
   mv $local $local.bak
   
-  ln -s $scriptdir/config/nvim $config
-  ln -s $scriptdir/local/nvim $local
+  echo "Creating symlinks to config..."
+  echo ""
+  ln -s $scriptdir/config $config
+  ln -s $scriptdir/local $local
 
+  echo "Untarring neovim..."
+  echo ""
   tar xvzf "$scriptdir/$nvimfile"
 
   isInFile=$(cat ~/.bashrc | grep -c "alias nvim")
@@ -73,18 +85,21 @@ unpack() {
     echo $nvimalias >> ~/.bashrc
   fi
 
+  ######################################## 
   # Add custom setup steps here
+  ######################################## 
 }
 
 while getopts ":hptu" option; do
    case $option in
-      p) # display Help
+      p) # create package
          packFlag=true
          ;;
-      t) # display Help
+      t) # create test package
          testFlag=true
+         packFlag=true
          ;;
-      u) # display Help
+      u) # unpack package
          unpackFlag=true
          ;;
       h) # display Help
@@ -99,10 +114,6 @@ while getopts ":hptu" option; do
          exit;;
    esac
 done
-
-# echo "packflag: " $packFlag
-# echo "unpackflag: " $unpackFlag
-# echo "testflag: " $testFlag
 
 if [ "$packFlag" = true ]; then
    pack
