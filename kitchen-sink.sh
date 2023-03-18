@@ -23,8 +23,10 @@ Help()
    echo "Syntax: kitchen-sink.sh [-h|p|u]"
    echo "options:"
    echo "h     [help] print this help text"
-   echo "p     [package] pack custom neovim config and create tar.gz file with everything needed for an offline installer"
-   echo "t     [test] create an untarred installer that can easily be tested inside a docker container"
+   echo "p     [package] pack custom neovim config and create tar.gz file with everything needed for an offline installer in this directory"
+   echo "t     [test] create an untarred installer that can easily be tested inside a docker container."
+   echo "             It also generates a .env file with the username, uid and gui of the current user that docker-compose uses to build and run containers"
+   echo "             that share the same user credentials and home directory as the current user." 
    echo "u     [unpackage] unpack contents of the current directory into a useable form"
    echo "c     [clean] clean up the test installer"
    echo
