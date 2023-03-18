@@ -23,15 +23,16 @@ Help()
    echo "options:"
    echo "h     [help] print this help text"
    echo "p     [package] pack custom neovim config and create tar.gz file with everything needed for an offline installer"
-   echo "t     [test package] run the pack comand"
+   echo "t     [test] create an untarred installer that can easily be tested inside a docker container"
    echo "u     [unpackage] unpack contents of the current directory into a useable form"
+   echo "c     [clean] clean up the test installer"
    echo
 }
 
 error()
 {
-    rm -rf $tmpdir
-    exit 1
+   clean
+   exit 1
 }
 
 # TODO: include the libraries that newer versions of neovim require so that this can work on older systems
@@ -59,7 +60,7 @@ pack() {
      echo "----- Creating the installer tar.gz..."
      echo ""
      tar -C $tmpdir/.. -cvzf $installer_name-$( date '+%Y%m%d%H%M%S' ).tar.gz kitchen-sink || error
-     rm -rf $tmpdir
+     clean
   fi
 }
 
@@ -90,7 +91,11 @@ unpack() {
   ######################################## 
 }
 
-while getopts ":hptu" option; do
+clean() {
+ rm -rf $tmpdir
+}
+
+while getopts ":hptuc" option; do
    case $option in
       p) # create package
          packFlag=true
@@ -101,6 +106,9 @@ while getopts ":hptu" option; do
          ;;
       u) # unpack package
          unpackFlag=true
+         ;;
+      c) # clean test installer
+         clean
          ;;
       h) # display Help
          Help
