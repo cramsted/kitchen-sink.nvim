@@ -21,6 +21,7 @@ Getting a custom neovim config running on a computer without a internet access s
 ## Target computer
 
 * Unix environment
+* tar
 
 # Usage
 
