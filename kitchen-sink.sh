@@ -100,8 +100,12 @@ while getopts ":hptu" option; do
    esac
 done
 
-if [ "$packFlag" ]; then
+# echo "packflag: " $packFlag
+# echo "unpackflag: " $unpackFlag
+# echo "testflag: " $testFlag
+
+if [ "$packFlag" = true ]; then
    pack
-elif [ "$unpackFlag" ]; then
+elif [ "$unpackFlag" = true ]; then
   unpack 
 fi

@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  u20.04:
+    user: ${MY_UID}:${MY_GID}
+    build: .
+    network_mode: "none"
+    volumes:
+      - /tmp/kitchen-sink:/app
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
