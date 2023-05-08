@@ -66,7 +66,7 @@ pack() {
      echo ""
      tar -C $tmpdir/.. -cvzf $installer_name-$( date '+%Y%m%d%H%M%S' ).tar.gz kitchen-sink || error
      clean
-  else
+  elif [ ! -f "$dockerenv" ]; then 
      touch $dockerenv
      echo MY_UID="$(id -u)" >> $dockerenv
      echo MY_GID="$(id -g)" >> $dockerenv
