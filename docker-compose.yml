@@ -14,3 +14,17 @@ services:
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
       - ./startup.sh:/startup.sh
+  f27:
+    container_name: f27
+    env_file: .env
+    user: ${MY_UID}:${MY_GID}
+    build: 
+      context: .
+      args:
+        - USER=${USER}
+    # network_mode: "none"
+    volumes:
+      - /tmp/kitchen-sink:/app
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - ./startup.sh:/startup.sh

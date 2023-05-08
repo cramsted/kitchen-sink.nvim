@@ -13,6 +13,7 @@ scriptname=$( basename -- "$0"; )
 scriptpath="$scriptdir/$scriptname"
 installer_name="nvim-installer"
 nvimalias="alias nvim='$scriptdir/nvim-linux64/bin/nvim'"
+nvimbuildalias="alias nvim='$scriptdir/local/nvim/bin/nvim'"
 dockerenv=".docker.env"
 
 Help()
@@ -49,7 +50,8 @@ pack() {
 
   echo "----- Downloading most recent version of neovim"
   echo ""
-  wget -P $tmpdir https://github.com/neovim/neovim/releases/download/v0.8.3/nvim-linux64.tar.gz || error
+  # wget -P $tmpdir https://github.com/neovim/neovim/releases/download/v0.8.3/nvim-linux64.tar.gz || error
+  git clone https://github.com/neovim/neovim $tmpdir/nvim
 
   echo "----- Packing the installation script..."
   echo ""
@@ -84,9 +86,16 @@ unpack() {
   ln -s $scriptdir/config $config
   ln -s $scriptdir/local $local
 
-  echo "Untarring neovim..."
+
+  # echo "Untarring neovim..."
+  # echo ""
+  # tar xvzf "$scriptdir/$nvimfile"
+
+  echo "Building neovim..."
   echo ""
-  tar xvzf "$scriptdir/$nvimfile"
+  cd nvim || error
+  git checkout stable || error
+  make CMAKE_BUILD_TYPE=Release || error
 
   isInFile=$(cat ~/.bashrc | grep -c "alias nvim")
   if [ $isInFile -lt 1 ]; then
